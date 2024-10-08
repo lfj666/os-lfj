@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "onix.h": "c",
+        "stdarg.h": "c",
+        "printk.h": "c"
+    }
+}
