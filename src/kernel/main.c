@@ -8,6 +8,8 @@
 #include <onix/assert.h>
 #include <onix/debug.h>
 #include <onix/task.h>
+#include <onix/interrupt.h>
+
 
 void test_args(int cnt, ...)
 {
@@ -30,7 +32,10 @@ void kernel_init()
 
     //gdt_init();
 
-    task_init();
+    //task_init();
+
+    interrupt_init();
+    
 
     return;
     
