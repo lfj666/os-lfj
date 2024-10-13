@@ -45,6 +45,9 @@ $(BUILD)/kernel.bin: $(BUILD)/kernel/start.o \
 					 $(BUILD)/kernel/schedule.o \
 					 $(BUILD)/kernel/interrupt.o \
 					 $(BUILD)/kernel/handler.o \
+					 $(BUILD)/kernel/stdlib.o \
+					 $(BUILD)/kernel/clock.o \
+
 
 
 	$(shell mkdir -p $(dir $@))
@@ -91,11 +94,19 @@ bochs:$(BUILD)/master.img
 
 .PHONY:qemu
 qemu:$(BUILD)/master.img
-	qemu-system-i386 -m 32M -boot c -hda $<
+	qemu-system-i386 \
+	-m 32M \
+	-boot c \
+	-drive file=$<,if=ide,index=0,media=disk,format=raw \
+	-audiodev pa,id=hda \
+	-machine pcspk-audiodev=hda \
 
 .PHONY:qemug
 qemug:$(BUILD)/master.img
-	qemu-system-i386 -s -S -m 32M -boot c -hda $<
+	qemu-system-i386 -s -S -m 32M -boot c \
+	-drive file=$<,if=ide,index=0,media=disk,format=raw \
+	-audiodev pa,id=hda \
+	-machine pcspk-audiodev=hda \
 
 
 

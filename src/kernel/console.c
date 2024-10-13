@@ -123,20 +123,19 @@ static void command_cr()
 
 static void scroll_up()
 {
-    if (screen + SCR_SIZE + ROW_SIZE < MEM_END)
-    {
-        u32 *ptr = (u32 *)screen + SCR_SIZE;
-        for (size_t i = 0; i < WIDTH; i++)
-            *ptr++ = erase;        
-        screen += ROW_SIZE;
-        pos += ROW_SIZE;
-    }
-    else
+    if (screen + SCR_SIZE + ROW_SIZE > MEM_END)
     {
         memcpy((void *)MEM_BASE,(const void *)screen,SCR_SIZE);
         pos -= (screen - MEM_BASE);
         screen = MEM_BASE;
     }
+    u32 *ptr = (u32 *)(screen + SCR_SIZE);
+    for (size_t i = 0; i < WIDTH; i++)
+        *ptr++ = erase;        
+    screen += ROW_SIZE;
+    pos += ROW_SIZE;
+    
+    // 刷新屏幕
     set_screen();
 }
 
@@ -152,6 +151,7 @@ static void command_lf() // \n
 }
 
 
+extern void start_beep();
 
 // 将buf中的内容写到控制台中
 void console_write(char *buf,u32 count)
@@ -168,6 +168,7 @@ void console_write(char *buf,u32 count)
         case ASCII_ENQ:
             break;
         case ASCII_BEL: // \a
+            start_beep();
             break;
         case ASCII_BS:
             command_bs();

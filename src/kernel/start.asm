@@ -9,10 +9,9 @@ _start:
     call kernel_init
 
     xchg bx,bx
-    int 0x80
+    ; int 0x80
 
-    xchg bx,bx
+    ; xchg bx,bx
 
 
-    
     jmp $

@@ -14,9 +14,29 @@ interrupt_handler_%1:
 %endmacro
 
 interrupt_entry:
-    mov eax,[esp]
+
+    ; 保存上文寄存器信息
+    push ds
+    push es
+    push fs
+    push gs
+    pusha ; eax,ebx,ecx,edx,esi,edi,esp,ebp 全部入桟
+
+    mov eax,[esp + 12 * 4] ; 中断号保存
+
+    ; 因为是处理器自己调函数，所以在调函数之前需要将函数的参数进行压桟
+    push eax ; 中断号入桟，用于调用相应的中断处理函数
     ; 中断号确定中断处理程序地址
     call [handler_table + eax * 4]
+    pop eax
+
+    ; 恢复下文寄存器信息
+    popa
+    pop gs
+    pop fs
+    pop es
+    pop ds
+
     add esp,8
 
     iret
